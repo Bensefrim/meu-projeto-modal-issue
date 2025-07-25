@@ -547,3 +547,11 @@
 .modal-backdrop {
     z-index: 1050 !important;
 }
+
+/* Mobile genérico: básico para não-iOS */
+@media screen and (max-width: 768px) {
+    .modal {
+        width: 100% !important;
+        bottom: 0 !important;  /* Básico, mas iOS sobrepõe */
+    }
+}

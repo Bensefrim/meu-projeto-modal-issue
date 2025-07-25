@@ -307,3 +307,45 @@
         padding-bottom: env(safe-area-inset-bottom);
     }
 }
+
+/* Corrige modal no iOS: força position fixed, z-index alto, e bottom 0 */
+@media screen and (max-device-width: 812px) and (-webkit-min-device-pixel-ratio: 2) {  /* Target específico para iOS devices */
+    .modal {
+        position: fixed !important;  /* Força fixo para colar na tela */
+        bottom: 0 !important;  /* Cola na inferior */
+        top: auto !important;  /* Remove top para evitar flutuação */
+        left: 0 !important;
+        right: 0 !important;
+        width: 100% !important;  /* Full width para mobile */
+        height: auto !important;  /* Altura automática para conteúdo */
+        max-height: 80vh !important;  /* Limita altura para evitar overflow */
+        overflow-y: auto !important;  /* Scroll interno se necessário */
+        z-index: 1050 !important;  /* Alto z-index para ficar acima de tudo */
+        border-top-left-radius: 10px !important;  /* Perfumaria mínima: bordas arredondadas */
+        border-top-right-radius: 10px !important;
+        background-color: white !important;  /* Fundo sólido para visibilidade */
+    }
+
+    /* Corrige backdrop: torna visível e com z-index apropriado */
+    .modal-backdrop {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100vw !important;
+        height: 100vh !important;
+        background-color: rgba(0, 0, 0, 0.5) !important;  /* Opacidade padrão */
+        z-index: 1040 !important;  /* Abaixo do modal, mas acima do body */
+    }
+
+    /* Previne scroll do body quando modal aberto */
+    body.modal-open {
+        overflow: hidden !important;  /* Bloqueia scroll */
+        position: fixed !important;  /* Fixa body para iOS quirk */
+        width: 100% !important;
+    }
+
+    /* Remoção de perfumaria: sem animações para teste rápido */
+    .modal.fade .modal-dialog {
+        transition: none !important;  /* Remove fade-in para simplicidade */
+    }
+}

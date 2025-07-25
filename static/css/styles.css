@@ -446,3 +446,34 @@ label {
     color: var(--primary-color);
     margin-bottom: 2rem;
 }
+
+/* Aumentar z-index do modal para iOS */
+.modal {
+    z-index: 1060 !important; /* Acima do backdrop (1040) e nav */
+}
+
+/* Ajustar modal para safe areas no iOS */
+.modal-dialog {
+    position: fixed !important;
+    top: env(safe-area-inset-top, 0);
+    bottom: env(safe-area-inset-bottom, 0);
+    left: env(safe-area-inset-left, 0);
+    right: env(safe-area-inset-right, 0);
+    margin: 0 !important; /* Remove margens padrão */
+    height: 100vh !important; /* Preenche tela */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Garantir no-scroll ao abrir modal */
+body.modal-open {
+    overflow: hidden !important;
+    padding-right: 0 !important; /* Previne shift no iOS */
+}
+
+/* Fixar nav inferior sem espaço extra */
+body.pwa-mode {
+    padding-bottom: calc(70px + env(safe-area-inset-bottom, 34px)) !important;
+    box-sizing: border-box;
+}

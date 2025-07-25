@@ -55,7 +55,10 @@
     </main>
 
     <!-- Modal de Teste -->
+    <div class="modal fade" id="testModal" tabindex="-1" aria-labelledby="testModalLabel" aria-hidden="true" style="touch-action: none;">
+    <!--
     <div class="modal fade" id="testModal" tabindex="-1" aria-labelledby="testModalLabel" aria-hidden="true">
+    -->
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
@@ -88,6 +91,39 @@
     <button class="fab-button" id="fabButton" aria-label="Abrir Modal">
         <i class="fas fa-plus"></i>
     </button>
+
+    <!-- Botão para abrir modal -->
+    <button id="fabButton">Abrir Modal</button>
+
+    <!-- Modal simples, sem animações fancy -->
+    <div class="modal fade" id="testModal" tabindex="-1" aria-labelledby="testModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">  <!-- Centered para simplicidade -->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="testModalLabel">Título do Modal</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Conteúdo aqui – teste com texto longo para scroll.
+                    Conteúdo aqui – teste com texto longo para scroll.
+                    Conteúdo aqui – teste com texto longo para scroll.
+                    Conteúdo aqui – teste com texto longo para scroll.
+                    Conteúdo aqui – teste com texto longo para scroll.
+                    Conteúdo aqui – teste com texto longo para scroll.
+                    Conteúdo aqui – teste com texto longo para scroll.
+                    Conteúdo aqui – teste com texto longo para scroll.
+                    Conteúdo aqui – teste com texto longo para scroll.
+                    Conteúdo aqui – teste com texto longo para scroll.
+                    Conteúdo aqui – teste com texto longo para scroll.
+                    Conteúdo aqui – teste com texto longo para scroll.
+                    Conteúdo aqui – teste com texto longo para scroll.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>    
 
 </div>
 {% endblock %}
