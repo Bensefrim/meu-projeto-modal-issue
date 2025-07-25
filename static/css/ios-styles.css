@@ -145,7 +145,8 @@
 
     /* Ajustes para modais em iOS */
     .modal {
-        z-index: var(--z-index-modal) !important;
+        /*z-index: var(--z-index-modal) !important;*/
+        z-index: 1050 !important; /* Padrão, mas forçado para garantia */
         position: fixed !important;
         display: none !important;
         padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left) !important;
@@ -311,8 +312,8 @@
 /* Corrige modal no iOS: força position fixed, z-index alto, e bottom 0 */
 @media screen and (max-device-width: 812px) and (-webkit-min-device-pixel-ratio: 2) {  /* Target específico para iOS devices */
     .modal {
-        position: fixed !important;  /* Força fixo para colar na tela */
-        bottom: 0 !important;  /* Cola na inferior */
+        /*position: fixed !important;  /* Força fixo para colar na tela */
+        /*bottom: 0 !important;  /* Cola na inferior */
         top: auto !important;  /* Remove top para evitar flutuação */
         left: 0 !important;
         right: 0 !important;
@@ -337,11 +338,37 @@
         z-index: 1040 !important;  /* Abaixo do modal, mas acima do body */
     }
 
-    /* Previne scroll do body quando modal aberto */
+    .modal-dialog.ios-bottom-sheet { /* <-- NOVA CLASSE ESPECÍFICA AQUI */
+        position: fixed !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        top: auto !important; /* Impede que ele seja 100% vertical */
+        margin: 0 !important; /* Remove margens padrão do modal-dialog */
+        max-width: 100% !important; /* Ocupa 100% da largura do viewport */
+        width: 100% !important; /* Garante largura total */
+        max-height: 80vh !important; /* Limita a altura para ser um bottom sheet */
+        height: auto !important; /* Altura flexível baseada no conteúdo */
+        transform: translateY(0) !important; /* Remove qualquer transform do Bootstrap que possa causar bug */
+        border-radius: 0 !important; /* Remove arredondamento default do modal */
+        border-top-left-radius: 10px !important; /* Borda arredondada superior */
+        border-top-right-radius: 10px !important;
+        background-color: white; /* Define background para a parte de baixo (se o modal-content for transparente) */
+    }
+
+    .modal-dialog.ios-bottom-sheet .modal-content {
+        height: auto !important; /* Altura auto para o conteúdo */
+        border: none !important; /* Remove bordas do content */
+        border-radius: 0 !important;
+        background-color: white !important; /* Garante background branco para o conteúdo */
+    }
+
+    /* 2. Regras para o body quando o modal está aberto (previne scroll) */
     body.modal-open {
-        overflow: hidden !important;  /* Bloqueia scroll */
-        position: fixed !important;  /* Fixa body para iOS quirk */
+        overflow: hidden !important;
+        position: fixed !important; /* Fixa body para prevenir shift no iOS */
         width: 100% !important;
+        height: 100% !important; /* Garante que o body fixado ocupe a tela toda */
     }
 
     /* Remoção de perfumaria: sem animações para teste rápido */
