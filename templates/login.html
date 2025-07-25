@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Pecuária">
+    <meta name="theme-color" content="#2c7a4e">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-touch-fullscreen" content="yes">
+    <title>Login - Sistema de Controle de Pecuária</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <link rel="stylesheet" href="/static/css/login.css">
+    <link rel="icon" href="/static/icons/icon-192x192.png">
+    <link rel="apple-touch-icon" href="/static/icons/icon-192x192.png">
+    <link rel="manifest" href="/static/manifest.json">
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-logo">
+            <h1>Sistema de Controle de Pecuária</h1>
+        </div>
+        
+        <h2 class="login-title">Login</h2>
+        
+        <div id="alert-container"></div>
+        
+        <form id="login-form">
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" class="form-control" required value="admin@sistema.com">
+                <small class="text-muted">Usuário padrão: admin@sistema.com</small>
+            </div>
+            
+            <div class="form-group">
+                <label for="senha">Senha</label>
+                <input type="password" id="senha" class="form-control" required value="admin123">
+                <small class="text-muted">Senha padrão: admin123</small>
+            </div>
+            
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Entrar</button>
+            </div>
+        </form>
+        
+        <div class="mt-3">
+            <p id="login-status"></p>
+        </div>
+        
+        <!-- Container para o botão de instalação do PWA -->
+        <div id="pwa-install-container">
+            <p>Instale nosso aplicativo para uma melhor experiência!</p>
+            <button id="pwa-install-btn">Instalar Aplicativo</button>
+        </div>
+    </div>
+    
+    <script src="/static/js/auth.js"></script>
+    <script>
+        // Registrar o service worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/static/service-worker.js')
+                    .then(function(registration) {
+                        console.log('Service Worker registrado com sucesso:', registration.scope);
+                    })
+                    .catch(function(error) {
+                        console.log('Falha ao registrar o Service Worker:', error);
+                    });
+            });
+        }
+        
+        // Variáveis para o PWA
+        let deferredPrompt;
+        const pwaInstallContainer = document.getElementById('pwa-install-container');
+        const pwaInstallBtn = document.getElementById('pwa-install-btn');
+        
+        // Capturar o evento beforeinstallprompt
+        window.addEventListener('beforeinstallprompt', (e) => {
+            // Prevenir o comportamento padrão
+            e.preventDefault();
+            // Armazenar o evento para uso posterior
+            deferredPrompt = e;
+            // Mostrar o botão de instalação
+            pwaInstallContainer.style.display = 'block';
+        });
+        
+        // Adicionar evento de clique ao botão de instalação
+        if (pwaInstallBtn) {
+            pwaInstallBtn.addEventListener('click', async () => {
+                if (!deferredPrompt) return;
+                
+                // Mostrar o prompt de instalação
+                deferredPrompt.prompt();
+                
+                // Esperar pela escolha do usuário
+                const { outcome } = await deferredPrompt.userChoice;
+                console.log(`Usuário ${outcome === 'accepted' ? 'aceitou' : 'recusou'} a instalação`);
+                
+                // Limpar a referência
+                deferredPrompt = null;
+                
+                // Esconder o botão de instalação
+                pwaInstallContainer.style.display = 'none';
+            });
+        }
+        
+        // Detectar se o app já está instalado
+        window.addEventListener('appinstalled', () => {
+            console.log('Aplicativo instalado');
+            // Esconder o botão de instalação
+            if (pwaInstallContainer) {
+                pwaInstallContainer.style.display = 'none';
+            }
+        });
+        
+        // Verificar se está sendo executado como PWA
+        if (window.matchMedia('(display-mode: standalone)').matches ||
+            window.navigator.standalone === true) {
+            console.log('Aplicativo está sendo executado no modo standalone/instalado');
+            
+            // Adicionar classe para estilos específicos de PWA
+            document.body.classList.add('pwa-mode');
+        }
+        
+        // Detectar dispositivo iOS
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        if (isIOS) {
+            document.body.classList.add('ios-device');
+            console.log('Dispositivo iOS detectado, aplicando estilos específicos');
+        }
+        
+        // Prevenir comportamento de bounce no iOS
+        document.body.addEventListener('touchmove', function(e) {
+            if (e.target === document.body) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+        
+        // Prevenir zoom com duplo toque
+        document.addEventListener('touchstart', function(event) {
+            if (event.touches.length > 1) {
+                event.preventDefault();
+            }
+        }, { passive: false });
+    </script>
+</body>
+</html>

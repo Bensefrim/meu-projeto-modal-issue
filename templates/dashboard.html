@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Sistema de Controle de Pecuária{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Dashboard</h1>
+
+<div class="dashboard-cards">
+    <div class="stat-card">
+        <h3>Total de Animais</h3>
+        <div class="value" id="total-animais">--</div>
+        <p>Animais cadastrados</p>
+    </div>
+    
+    <div class="stat-card">
+        <h3>Bovinos</h3>
+        <div class="value" id="total-bovinos">--</div>
+        <p>Bovinos cadastrados</p>
+    </div>
+    
+    <div class="stat-card">
+        <h3>Suínos</h3>
+        <div class="value" id="total-suinos">--</div>
+        <p>Suínos cadastrados</p>
+    </div>
+    
+    <div class="stat-card">
+        <h3>Outros</h3>
+        <div class="value" id="total-outros">--</div>
+        <p>Outros animais</p>
+    </div>
+    <!-- Card de distribuição por tipo -->
+    <div class="stat-card" style="grid-column: 1 / -1;">
+        <h3>Distribuição por Tipo</h3>
+        <div class="card-body">
+            <table class="table" id="tabela-tipos">
+                <thead>
+                    <tr>
+                        <th>Tipo</th>
+                        <th>Quantidade</th>
+                        <th>Percentual</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Será preenchido via JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <main class="container mt-5 pt-5">
+        <button type="button" class="btn btn-success mt-3" id="openModalBtn">
+            Abrir Modal de Teste
+        </button>
+    </main>
+
+    <!-- Modal de Teste -->
+    <div class="modal fade" id="testModal" tabindex="-1" aria-labelledby="testModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="testModalLabel">Modal de Teste</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Este é o conteúdo do modal.</p>
+                    <p>Ele deve aparecer na frente da tela fumê (backdrop).</p>
+                    <form>
+                        <div class="mb-3">
+                            <label for="exampleInputEmail1" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                        </div>
+                        <div class="mb-3">
+                            <label for="exampleInputPassword1" class="form-label">Senha</label>
+                            <input type="password" class="form-control" id="exampleInputPassword1">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                    <button type="button" class="btn btn-primary">Salvar Mudanças</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Action Button (FAB) -->
+    <button class="fab-button" id="fabButton" aria-label="Abrir Modal">
+        <i class="fas fa-plus"></i>
+    </button>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', async () => {
+        try {
+            // Verificar acesso
+            const acessoPermitido = await checkAccess();
+            if (!acessoPermitido) return;
+            
+            // Carregar estatísticas do dashboard
+            const response = await fetch('/api/dashboard/stats');
+            const data = await response.json();
+            
+            if (!response.ok) {
+                throw new Error(data.error || 'Erro ao carregar estatísticas');
+            }
+            
+            // Processar dados
+            const stats = data.stats;
+            
+            // Calcular totais
+            let totalAnimais = 0;
+            let totalBovinos = 0;
+            let totalSuinos = 0;
+            let totalOutros = 0;
+            
+            if (stats.animais_por_tipo && stats.animais_por_tipo.length > 0) {
+                stats.animais_por_tipo.forEach(item => {
+                    const quantidade = item.total;
+                    totalAnimais += quantidade;
+                    
+                    if (item.tipo.toLowerCase() === 'bovino') {
+                        totalBovinos = quantidade;
+                    } else if (item.tipo.toLowerCase() === 'suíno') {
+                        totalSuinos = quantidade;
+                    } else {
+                        totalOutros += quantidade;
+                    }
+                });
+                
+                // Atualizar cards
+                document.getElementById('total-animais').textContent = totalAnimais;
+                document.getElementById('total-bovinos').textContent = totalBovinos;
+                document.getElementById('total-suinos').textContent = totalSuinos;
+                document.getElementById('total-outros').textContent = totalOutros;
+                
+                // Preencher tabela de tipos
+                const tabelaTipos = document.getElementById('tabela-tipos').querySelector('tbody');
+                tabelaTipos.innerHTML = '';
+                
+                stats.animais_por_tipo.forEach(item => {
+                    const percentual = ((item.total / totalAnimais) * 100).toFixed(1);
+                    
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${item.tipo}</td>
+                        <td>${item.total}</td>
+                        <td>${percentual}%</td>
+                    `;
+                    
+                    tabelaTipos.appendChild(tr);
+                });
+            }
+            
+        } catch (error) {
+            console.error('Erro ao carregar dashboard:', error);
+            showAlert('error', 'Erro ao carregar dados do dashboard');
+        }
+    });
+</script>
+{% endblock %}

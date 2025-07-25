@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <!-- Fundo circular -->
+  <circle cx="256" cy="256" r="256" fill="#2b7d2b" />
+  
+  <!-- Círculo interno -->
+  <circle cx="256" cy="256" r="220" fill="#3c9f3c" />
+  
+  <!-- Silhueta de boi estilizada -->
+  <path d="M 130,220
+           C 120,200 110,190 100,190
+           C 90,190 85,200 85,210
+           C 85,220 90,230 100,235
+           L 90,270
+           C 85,280 90,290 100,290
+           L 120,290
+           L 130,320
+           L 150,330
+           L 160,360
+           L 180,370
+           L 190,340
+           L 210,340
+           L 220,370
+           L 240,370
+           L 250,340
+           L 270,340
+           L 280,370
+           L 300,370
+           L 310,340
+           L 330,340
+           L 340,370
+           L 360,360
+           L 370,330
+           L 390,320
+           L 400,290
+           L 420,290
+           C 430,290 435,280 430,270
+           L 420,235
+           C 430,230 435,220 435,210
+           C 435,200 430,190 420,190
+           C 410,190 400,200 390,220
+           C 380,200 360,190 340,190
+           L 180,190
+           C 160,190 140,200 130,220
+           Z" 
+        fill="#ffffff" />
+  
+  <!-- Olhos -->
+  <circle cx="160" cy="230" r="10" fill="#2b7d2b" />
+  <circle cx="360" cy="230" r="10" fill="#2b7d2b" />
+  
+  <!-- Chifres -->
+  <path d="M 140,190 L 120,150 L 150,170 Z" fill="#ffffff" />
+  <path d="M 380,190 L 400,150 L 370,170 Z" fill="#ffffff" />
+  
+  <!-- Texto "Pecuária" na parte inferior -->
+  <text x="256" y="430" 
+        font-family="Arial, sans-serif" 
+        font-size="48" 
+        font-weight="bold" 
+        text-anchor="middle" 
+        fill="#ffffff">Pecuária</text>
+</svg>

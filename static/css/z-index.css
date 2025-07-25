@@ -1,0 +1,23 @@
+/**
+ * Arquivo de definição de z-index para garantir consistência em toda a aplicação
+ * Este arquivo deve ser importado no início do styles.css
+ */
+
+:root {
+    /* Z-index para elementos de interface */
+    --z-index-base: 1;
+    --z-index-dropdown: 1010;
+    --z-index-sticky: 1020;
+    --z-index-fixed: 1030;
+    --z-index-header: 1040;
+    --z-index-app-nav: 1050;
+    --z-index-fab: 1060;
+    --z-index-mobile-menu-toggle: 1070;
+    --z-index-mobile-menu: 1080;
+    --z-index-mobile-menu-close: 1090;
+    
+    /* Z-index para modais e overlays */
+    --z-index-modal-backdrop: 1040;
+    --z-index-modal: 1050;
+    --z-index-modal-dialog: 1060;
+}

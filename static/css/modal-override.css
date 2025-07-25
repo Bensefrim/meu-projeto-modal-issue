@@ -1,0 +1,145 @@
+/**
+ * Sobreposições específicas para modais
+ * Este arquivo contém regras de alta prioridade para garantir que os modais funcionem corretamente
+ * Deve ser carregado por último para ter precedência sobre outros estilos
+ */
+
+/* Garantir que o backdrop tenha z-index correto e seja visível */
+.modal-backdrop {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    background-color: rgba(0, 0, 0, 0.5) !important;
+    z-index: 1040 !important;
+    opacity: 0.5 !important;
+    pointer-events: auto !important;
+}
+
+/* Garantir que o modal tenha z-index maior que o backdrop */
+.modal {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    z-index: 1050 !important;
+    display: none !important;
+    overflow: hidden !important;
+    outline: 0 !important;
+}
+
+/* Garantir que o modal-dialog tenha z-index ainda maior */
+.modal-dialog {
+    position: relative !important;
+    width: auto !important;
+    margin: 0.5rem auto !important;
+    pointer-events: none !important;
+    z-index: 1060 !important;
+    max-width: 500px !important;
+}
+
+/* Estilos para o modal-content */
+.modal-content {
+    position: relative !important;
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    pointer-events: auto !important;
+    background-color: #fff !important;
+    background-clip: padding-box !important;
+    border: 1px solid rgba(0, 0, 0, 0.2) !important;
+    border-radius: 0.3rem !important;
+    outline: 0 !important;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Garantir que o modal seja visível quando ativo */
+.modal.show {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+/* Garantir que o modal e backdrop não bloqueiem interações quando não visíveis */
+.modal:not(.show),
+.modal-backdrop:not(.show) {
+    pointer-events: none !important;
+    opacity: 0 !important;
+}
+
+/* Garantir que o backdrop seja visível e clicável quando ativo */
+.modal-backdrop.show {
+    opacity: 0.5 !important;
+    pointer-events: auto !important;
+}
+
+/* Garantir que os botões dentro dos modais sejam clicáveis */
+.modal .btn,
+.modal button,
+.modal a,
+.modal [role="button"],
+.modal input[type="button"],
+.modal input[type="submit"] {
+    position: relative !important;
+    cursor: pointer !important;
+    pointer-events: auto !important;
+    touch-action: manipulation !important;
+}
+
+/* Ajustes para dispositivos móveis */
+@media (max-width: 768px) {
+    .modal-dialog {
+        margin: 1.75rem auto !important;
+        max-width: 90% !important;
+    }
+    
+    .modal-content {
+        border-radius: 12px !important;
+        max-height: 80vh !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+    }
+}
+
+/* Ajustes específicos para iOS */
+@supports (-webkit-touch-callout: none) {
+    .modal {
+        padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left) !important;
+    }
+    
+    .modal-content {
+        border-radius: 12px !important;
+        max-height: 80vh !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+    }
+    
+    /* Garantir que os botões dentro dos modais sejam clicáveis em iOS */
+    .modal .btn,
+    .modal button,
+    .modal a,
+    .modal [role="button"],
+    .modal input[type="button"],
+    .modal input[type="submit"] {
+        min-height: 44px !important;
+        min-width: 44px !important;
+    }
+}
+
+/* Forçar que o body não seja fixo quando o modal estiver aberto */
+body.modal-open {
+    position: static !important;
+    overflow: hidden !important;
+    width: auto !important;
+    height: auto !important;
+}
+
+/* Garantir que o html não seja fixo quando o modal estiver aberto */
+html.modal-open {
+    position: static !important;
+    overflow: hidden !important;
+}

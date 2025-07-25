@@ -1,0 +1,325 @@
+{% extends "base.html" %}
+
+{% block title %}Meu Perfil - Sistema de Controle de Pecuária{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h1>Meu Perfil</h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12 col-md-8 col-lg-6 mx-auto">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">Informações do Usuário</h5>
+            </div>
+            <div class="card-body">
+                <div id="perfil-loading" class="text-center py-3">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Carregando...</span>
+                    </div>
+                    <p class="mt-2">Carregando dados do perfil...</p>
+                </div>
+                
+                <form id="perfil-form" style="display: none;">
+                    <input type="hidden" id="usuario-id">
+                    
+                    <div class="mb-3">
+                        <label for="usuario-nome" class="form-label">Nome</label>
+                        <input type="text" class="form-control" id="usuario-nome" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="usuario-email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="usuario-email" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="usuario-tipo" class="form-label">Tipo de Usuário</label>
+                        <input type="text" class="form-control" id="usuario-tipo" readonly>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="usuario-ultimo-login" class="form-label">Último Login</label>
+                        <input type="text" class="form-control" id="usuario-ultimo-login" readonly>
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <button type="button" class="btn btn-primary" onclick="salvarPerfil()">
+                            <i class="fas fa-save"></i> Salvar Alterações
+                        </button>
+                        <button type="button" class="btn btn-secondary" onclick="showAlterarSenhaModal()">
+                            <i class="fas fa-key"></i> Alterar Senha
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Alteração de Senha -->
+<div class="modal fade" id="alterarSenhaModal" tabindex="-1" aria-labelledby="alterarSenhaModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="alterarSenhaModalLabel">Alterar Senha</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body">
+                <form id="alterar-senha-form">
+                    <div class="mb-3">
+                        <label for="senha-atual" class="form-label">Senha Atual</label>
+                        <input type="password" class="form-control" id="senha-atual" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="nova-senha" class="form-label">Nova Senha</label>
+                        <input type="password" class="form-control" id="nova-senha" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="confirmar-senha" class="form-label">Confirmar Nova Senha</label>
+                        <input type="password" class="form-control" id="confirmar-senha" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="alterarSenha()">Salvar</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/js/all.min.js"></script>
+<script>
+    // Variáveis globais
+    let alterarSenhaModal = null;
+    
+    // Inicializar quando o DOM estiver carregado
+    document.addEventListener('DOMContentLoaded', function() {
+        // Inicializar modal
+        alterarSenhaModal = new bootstrap.Modal(document.getElementById('alterarSenhaModal'));
+        
+        // Carregar dados do perfil
+        carregarPerfil();
+    });
+    
+    // Função para carregar os dados do perfil
+    async function carregarPerfil() {
+        try {
+            mostrarLoading(true);
+            
+            const response = await fetch(`/api/usuarios/${getUserId()}`, {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            });
+            
+            if (response.status === 401) {
+                // Redirecionar para a página de login se não estiver autenticado
+                window.location.href = '/login';
+                return;
+            }
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                const usuario = data.usuario;
+                
+                // Preencher o formulário
+                document.getElementById('usuario-id').value = usuario.id;
+                document.getElementById('usuario-nome').value = usuario.nome || '';
+                document.getElementById('usuario-email').value = usuario.email || '';
+                
+                // Formatar o tipo de usuário para exibição
+                let tipoFormatado = 'Desconhecido';
+                switch (usuario.tipo_usuario) {
+                    case 'admin':
+                        tipoFormatado = 'Administrador';
+                        break;
+                    case 'gerente':
+                        tipoFormatado = 'Gerente';
+                        break;
+                    case 'operador':
+                        tipoFormatado = 'Operador';
+                        break;
+                }
+                document.getElementById('usuario-tipo').value = tipoFormatado;
+                
+                // Formatar a data de último login
+                const ultimoLogin = usuario.ultimo_login ? new Date(usuario.ultimo_login).toLocaleString() : 'Nunca';
+                document.getElementById('usuario-ultimo-login').value = ultimoLogin;
+                
+                // Mostrar o formulário
+                document.getElementById('perfil-form').style.display = 'block';
+            } else {
+                showAlert('error', data.error || 'Erro ao carregar dados do perfil');
+            }
+        } catch (error) {
+            console.error('Erro ao carregar dados do perfil:', error);
+            showAlert('error', 'Erro ao carregar dados do perfil');
+        } finally {
+            mostrarLoading(false);
+        }
+    }
+    
+    // Função para salvar as alterações do perfil
+    async function salvarPerfil() {
+        // Validar o formulário
+        const form = document.getElementById('perfil-form');
+        if (!form.checkValidity()) {
+            form.reportValidity();
+            return;
+        }
+        
+        // Obter os dados do formulário
+        const id = document.getElementById('usuario-id').value;
+        const usuario = {
+            nome: document.getElementById('usuario-nome').value,
+            email: document.getElementById('usuario-email').value
+        };
+        
+        try {
+            const response = await fetch(`/api/usuarios/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: JSON.stringify(usuario)
+            });
+            
+            if (response.status === 401) {
+                // Redirecionar para a página de login se não estiver autenticado
+                window.location.href = '/login';
+                return;
+            }
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                showAlert('success', 'Perfil atualizado com sucesso');
+            } else {
+                showAlert('error', data.error || 'Erro ao atualizar perfil');
+            }
+        } catch (error) {
+            console.error('Erro ao atualizar perfil:', error);
+            showAlert('error', 'Erro ao atualizar perfil');
+        }
+    }
+    
+    // Função para mostrar o modal de alteração de senha
+    function showAlterarSenhaModal() {
+        // Limpar o formulário
+        document.getElementById('alterar-senha-form').reset();
+        
+        // Mostrar o modal
+        alterarSenhaModal.show();
+    }
+    
+    // Função para alterar a senha
+    async function alterarSenha() {
+        // Validar o formulário
+        const form = document.getElementById('alterar-senha-form');
+        if (!form.checkValidity()) {
+            form.reportValidity();
+            return;
+        }
+        
+        const senhaAtual = document.getElementById('senha-atual').value;
+        const novaSenha = document.getElementById('nova-senha').value;
+        const confirmarSenha = document.getElementById('confirmar-senha').value;
+        
+        // Verificar se as senhas coincidem
+        if (novaSenha !== confirmarSenha) {
+            showAlert('error', 'As senhas não coincidem');
+            return;
+        }
+        
+        try {
+            const response = await fetch('/api/alterar_senha', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: JSON.stringify({
+                    senha_atual: senhaAtual,
+                    nova_senha: novaSenha,
+                    is_senha_temporaria: false
+                })
+            });
+            
+            if (response.status === 401) {
+                // Redirecionar para a página de login se não estiver autenticado
+                window.location.href = '/login';
+                return;
+            }
+            
+            const data = await response.json();
+            
+            if (data.success || data.message) {
+                showAlert('success', data.message || 'Senha alterada com sucesso');
+                alterarSenhaModal.hide();
+            } else {
+                showAlert('error', data.error || 'Erro ao alterar senha');
+            }
+        } catch (error) {
+            console.error('Erro ao alterar senha:', error);
+            showAlert('error', 'Erro ao alterar senha');
+        }
+    }
+    
+    // Função para mostrar/esconder o loading
+    function mostrarLoading(mostrar) {
+        const loading = document.getElementById('perfil-loading');
+        const form = document.getElementById('perfil-form');
+        
+        loading.style.display = mostrar ? 'block' : 'none';
+        form.style.display = mostrar ? 'none' : 'block';
+    }
+    
+    // Função para obter o ID do usuário atual da sessão
+    function getUserId() {
+        // Esta função deve retornar o ID do usuário atual
+        // Normalmente, isso seria obtido da sessão ou de um cookie
+        // Para fins de demonstração, vamos usar uma função que busca da URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const id = urlParams.get('id');
+        
+        // Se não houver ID na URL, assumimos que é o usuário atual
+        if (!id) {
+            // Aqui você pode implementar a lógica para obter o ID do usuário atual
+            // Por exemplo, de uma variável global definida no template
+            return document.querySelector('meta[name="user-id"]')?.content || '';
+        }
+        
+        return id;
+    }
+    
+    // Função auxiliar para mostrar alertas
+    function showAlert(type, message) {
+        const alertContainer = document.getElementById('alert-container');
+        if (!alertContainer) return;
+
+        const alertDiv = document.createElement('div');
+        alertDiv.className = `alert alert-${type === 'error' ? 'danger' : type}`;
+        alertDiv.textContent = message;
+
+        alertContainer.innerHTML = '';
+        alertContainer.appendChild(alertDiv);
+
+        // Remover o alerta após 5 segundos
+        setTimeout(() => {
+            alertDiv.remove();
+        }, 5000);
+    }
+</script>
+{% endblock %}

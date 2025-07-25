@@ -1,0 +1,148 @@
+/**
+ * Estilos específicos para PWA (Progressive Web App)
+ * Este arquivo contém ajustes específicos para melhorar a experiência quando o app está instalado como PWA
+ */
+
+/* Estilos para quando o app está em modo standalone (PWA instalado) */
+@media all and (display-mode: standalone) {
+    /* Ajustes para o corpo da página */
+    body {
+        /* Respeitar as áreas seguras em todos os lados */
+        padding-left: env(safe-area-inset-left);
+        padding-right: env(safe-area-inset-right);
+    }
+
+    /* Ajustes para o conteúdo principal quando a navegação de app está ativa */
+    main.container {
+        padding-bottom: 70px; /* Espaço para a navegação de app */
+    }
+
+    /* Impedir qualquer scroll horizontal em modo standalone */
+    .container,
+    main,
+    .card,
+    .card-body,
+    .row,
+    .col,
+    [class*="col-"],
+    .table-responsive {
+        width: 100%;
+        max-width: 100%;
+        overflow-x: hidden;
+        box-sizing: border-box;
+    }
+
+    /* Melhorar a experiência em dispositivos */
+    html {
+        height: 100%;
+        width: 100%;
+    }
+
+    body {
+        min-height: 100%;
+        width: 100%;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* Impedir que o conteúdo seja maior que a tela */
+    .container,
+    main,
+    .card,
+    .card-body {
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+
+    /* Ajustar o espaço para a barra de navegação inferior */
+    body.pwa-mode {
+        padding-bottom: calc(70px + env(safe-area-inset-bottom, 34px));
+    }
+
+    /* Garantir que o conteúdo principal não fique sob a barra de status */
+    main.container {
+        padding-top: 1.25rem;
+        padding-bottom: 1rem;
+    }
+}
+
+/* Estilo para navegação tipo app nativo */
+.nav-app-style {
+    display: none; /* Esconder por padrão, será mostrado via JavaScript quando necessário */
+}
+
+.nav-app-style.active {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: white;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    z-index: var(--z-index-app-nav);
+    padding: 10px 0;
+    justify-content: space-around;
+    /* Garantir que a barra fique no fundo da tela e respeite a área segura inferior */
+    padding-bottom: calc(10px + env(safe-area-inset-bottom, 34px));
+    margin-bottom: 0;
+    height: auto;
+    /* Ativar aceleração de hardware */
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    /* Garantir que a barra respeite as áreas seguras laterais */
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+}
+
+/* Espaçador para área segura inferior em dispositivos */
+#safe-area-spacer {
+    height: env(safe-area-inset-bottom);
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+
+.nav-app-style a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: #666;
+    font-size: 0.8rem;
+    padding: 8px 0;
+    transition: all 0.3s ease;
+    position: relative;
+    width: 20%;
+    text-align: center;
+}
+
+.nav-app-style a i {
+    font-size: 1.5rem;
+    margin-bottom: 5px;
+    transition: all 0.3s ease;
+}
+
+.nav-app-style a.active {
+    color: var(--primary-color);
+}
+
+/* Classe para quando o app está em modo PWA */
+body.pwa-mode {
+    padding-bottom: 70px; /* Espaço para a navegação de app */
+}
+
+/* Classe para dispositivos iOS */
+body.ios-device {
+    padding-top: env(safe-area-inset-top, 0);
+    padding-bottom: env(safe-area-inset-bottom, 0);
+    padding-left: env(safe-area-inset-left, 0);
+    padding-right: env(safe-area-inset-right, 0);
+}
+
+body.ios-device .nav-app-style {
+    padding-bottom: env(safe-area-inset-bottom, 10px);
+}
+
+body.ios-device.pwa-mode {
+    padding-bottom: calc(70px + env(safe-area-inset-bottom, 34px));
+}

@@ -1,0 +1,122 @@
+/**
+ * Correções específicas para navegação
+ * Este arquivo contém ajustes para garantir que os botões de navegação tenham o mesmo tamanho em todas as páginas
+ */
+
+/* Estilos gerais para navegação de app */
+.nav-app-style {
+    display: none;
+}
+
+.nav-app-style.active {
+    display: flex !important;
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    background-color: white !important;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1) !important;
+    z-index: var(--z-index-app-nav) !important;
+    padding: 10px 0 !important;
+    justify-content: space-around !important;
+    padding-bottom: calc(10px + env(safe-area-inset-bottom, 34px)) !important;
+    margin-bottom: 0 !important;
+    height: auto !important;
+    -webkit-transform: translateZ(0) !important;
+    transform: translateZ(0) !important;
+    padding-left: env(safe-area-inset-left) !important;
+    padding-right: env(safe-area-inset-right) !important;
+}
+
+/* Garantir que os links de navegação tenham o mesmo tamanho em todas as páginas */
+.nav-app-style a {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-decoration: none !important;
+    color: #666 !important;
+    font-size: 0.8rem !important;
+    padding: 8px 0 !important;
+    transition: all 0.3s ease !important;
+    position: relative !important;
+    width: 20% !important;
+    text-align: center !important;
+    min-height: 60px !important;
+    box-sizing: border-box !important;
+}
+
+.nav-app-style a i {
+    font-size: 1.5rem !important;
+    margin-bottom: 5px !important;
+    transition: all 0.3s ease !important;
+    display: block !important;
+    line-height: 1.5 !important;
+}
+
+.nav-app-style a span {
+    display: block !important;
+    width: 100% !important;
+    text-align: center !important;
+    font-size: 0.75rem !important;
+    line-height: 1.2 !important;
+    margin-top: 4px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+
+.nav-app-style a.active {
+    color: var(--primary-color) !important;
+}
+
+.nav-app-style a.active i {
+    transform: scale(1.2) !important;
+}
+
+/* Ajustes específicos para iOS */
+@supports (-webkit-touch-callout: none) {
+    .nav-app-style {
+        background-color: rgba(255, 255, 255, 0.95) !important;
+        backdrop-filter: blur(10px) !important;
+        -webkit-backdrop-filter: blur(10px) !important;
+        border-top: 1px solid rgba(0, 0, 0, 0.1) !important;
+    }
+    
+    .nav-app-style a {
+        padding: 10px 0 !important;
+        min-height: 70px !important;
+    }
+    
+    .nav-app-style a i {
+        font-size: 1.75rem !important;
+    }
+    
+    .nav-app-style a span {
+        font-size: 0.8rem !important;
+        font-weight: 500 !important;
+    }
+}
+
+/* Ajustes para dispositivos móveis */
+@media (max-width: 768px) {
+    .nav-app-style.active {
+        height: auto !important;
+        min-height: 70px !important;
+    }
+    
+    .nav-app-style a {
+        min-height: 60px !important;
+    }
+}
+
+/* Ajustes para telas muito pequenas */
+@media (max-width: 320px) {
+    .nav-app-style a i {
+        font-size: 1.4rem !important;
+    }
+    
+    .nav-app-style a span {
+        font-size: 0.7rem !important;
+    }
+}

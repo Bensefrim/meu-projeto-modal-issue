@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block title %}Em Construção - Sistema de Controle de Pecuária{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h1 class="card-title">Página em Construção</h1>
+    </div>
+    <div class="card-body text-center">
+        <div class="mb-4">
+            <i class="fas fa-hard-hat fa-5x text-warning"></i>
+        </div>
+        <h2>Estamos trabalhando nisso!</h2>
+        <p class="mb-4">Esta funcionalidade está em desenvolvimento e estará disponível em breve.</p>
+        <a href="/dashboard" class="btn btn-primary">Voltar para o Início</a>
+    </div>
+    
+    <main class="container mt-5 pt-5">
+        <p>Este é um projeto mínimo para testar o comportamento de modais em PWAs no iOS.</p>
+        <p>Ajustamos o CSS para garantir que o modal e seu backdrop (`tela fumê`) sejam exibidos corretamente.</p>
+        <p>Clique no botão abaixo ou no FAB (canto inferior direito) para abrir o modal.</p>
+        <button type="button" class="btn btn-success mt-3" id="openModalBtn">
+            Abrir Modal de Teste
+        </button>
+    </main>
+
+    <!-- Modal de Teste -->
+    <div class="modal fade" id="testModal" tabindex="-1" aria-labelledby="testModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="testModalLabel">Modal de Teste</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Este é o conteúdo do modal.</p>
+                    <p>Ele deve aparecer na frente da tela fumê (backdrop).</p>
+                    <form>
+                        <div class="mb-3">
+                            <label for="exampleInputEmail1" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                        </div>
+                        <div class="mb-3">
+                            <label for="exampleInputPassword1" class="form-label">Senha</label>
+                            <input type="password" class="form-control" id="exampleInputPassword1">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                    <button type="button" class="btn btn-primary">Salvar Mudanças</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Action Button (FAB) -->
+    <button class="fab-button" id="fabButton" aria-label="Abrir Modal">
+        <i class="fas fa-plus"></i>
+    </button>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+
+ 
+{% endblock %}

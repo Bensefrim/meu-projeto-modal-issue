@@ -1,0 +1,78 @@
+{
+  "name": "Sistema de Controle de Pecuária",
+  "short_name": "Pecuária",
+  "start_url": "/login",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2c7a4e",
+  "orientation": "portrait",
+  "scope": "/",
+  "description": "Sistema completo para gestão de pecuária e controle de rebanho",
+  "categories": ["business", "productivity", "utilities"],
+  "lang": "pt-BR",
+  "dir": "ltr",
+  "display_override": ["standalone", "fullscreen", "minimal-ui"],
+  "icons": [
+      {
+          "src": "/static/icons/icon-192x192.png",
+          "sizes": "192x192",
+          "type": "image/png",
+          "purpose": "any maskable"
+      },
+      {
+          "src": "/static/icons/icon-512x512.png",
+          "sizes": "512x512",
+          "type": "image/png",
+          "purpose": "any maskable"
+      }
+  ],
+  "shortcuts": [
+    {
+      "name": "Dashboard",
+      "short_name": "Dashboard",
+      "description": "Acesse o dashboard do sistema",
+      "url": "/dashboard",
+      "icons": [{ "src": "/static/icons/icon-192x192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Fazendas",
+      "short_name": "Fazendas",
+      "description": "Gerenciar fazendas",
+      "url": "/fazendas",
+      "icons": [{ "src": "/static/icons/icon-192x192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Animais",
+      "short_name": "Animais",
+      "description": "Gerenciar animais do rebanho",
+      "url": "/animais",
+      "icons": [{ "src": "/static/icons/icon-192x192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Relatórios",
+      "short_name": "Relatórios",
+      "description": "Visualizar relatórios do sistema",
+      "url": "/relatorios",
+      "icons": [{ "src": "/static/icons/icon-192x192.png", "sizes": "192x192" }]
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false,
+  "screenshots": [
+    {
+      "src": "/static/screenshots/dashboard.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "platform": "wide",
+      "label": "Dashboard do Sistema de Controle de Pecuária"
+    },
+    {
+      "src": "/static/screenshots/mobile.png",
+      "sizes": "750x1334",
+      "type": "image/png",
+      "platform": "narrow",
+      "label": "Versão móvel do Sistema de Controle de Pecuária"
+    }
+  ],
+  "id": "pecuaria-app-v1"
+}

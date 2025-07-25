@@ -1,0 +1,177 @@
+{% extends "base.html" %}
+
+{% block title %}Teste do PWA - Sistema de Controle de Pecuária{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="text-center">Teste do PWA</h1>
+            <p class="text-center">Esta página permite testar o funcionamento do Progressive Web App</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title mb-0">Status do PWA</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <strong>Service Worker:</strong>
+                        <span id="sw-status">Verificando...</span>
+                    </div>
+                    <div class="mb-3">
+                        <strong>Instalável:</strong>
+                        <span id="installable-status">Verificando...</span>
+                    </div>
+                    <div class="mb-3">
+                        <strong>Status da Rede:</strong>
+                        <span id="network-status">Verificando...</span>
+                    </div>
+                    <div class="mb-3">
+                        <strong>Modo de Exibição:</strong>
+                        <span id="display-mode">Verificando...</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header bg-success text-white">
+                    <h5 class="card-title mb-0">Teste de Cache</h5>
+                </div>
+                <div class="card-body">
+                    <p>Clique no botão abaixo para testar o acesso a uma imagem em cache:</p>
+                    <button id="test-cache-btn" class="btn btn-primary">Testar Cache</button>
+                    <div id="cache-result" class="mt-3"></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h5 class="card-title mb-0">Instruções</h5>
+                </div>
+                <div class="card-body">
+                    <ol>
+                        <li>Verifique se o Service Worker está registrado</li>
+                        <li>Se disponível, instale o aplicativo usando o botão de instalação do navegador</li>
+                        <li>Desconecte sua internet e recarregue esta página para testar o funcionamento offline</li>
+                        <li>Verifique se os ícones do aplicativo aparecem corretamente após a instalação</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Verificar status do Service Worker
+    const swStatus = document.getElementById('sw-status');
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistration().then(registration => {
+            if (registration) {
+                swStatus.textContent = 'Registrado ✅';
+                swStatus.classList.add('text-success');
+            } else {
+                swStatus.textContent = 'Não registrado ❌';
+                swStatus.classList.add('text-danger');
+            }
+        }).catch(error => {
+            swStatus.textContent = 'Erro ao verificar ❌';
+            swStatus.classList.add('text-danger');
+            console.error('Erro ao verificar Service Worker:', error);
+        });
+    } else {
+        swStatus.textContent = 'Não suportado pelo navegador ❌';
+        swStatus.classList.add('text-danger');
+    }
+
+    // Verificar se é instalável
+    const installableStatus = document.getElementById('installable-status');
+    if ('BeforeInstallPromptEvent' in window) {
+        installableStatus.textContent = 'Sim ✅';
+        installableStatus.classList.add('text-success');
+    } else {
+        installableStatus.textContent = 'Não suportado ou já instalado ❓';
+        installableStatus.classList.add('text-warning');
+    }
+
+    // Verificar status da rede
+    const networkStatus = document.getElementById('network-status');
+    if (navigator.onLine) {
+        networkStatus.textContent = 'Online ✅';
+        networkStatus.classList.add('text-success');
+    } else {
+        networkStatus.textContent = 'Offline ❌';
+        networkStatus.classList.add('text-danger');
+    }
+
+    // Adicionar listener para mudanças no status da rede
+    window.addEventListener('online', function() {
+        networkStatus.textContent = 'Online ✅';
+        networkStatus.className = 'text-success';
+    });
+    
+    window.addEventListener('offline', function() {
+        networkStatus.textContent = 'Offline ❌';
+        networkStatus.className = 'text-danger';
+    });
+
+    // Verificar modo de exibição
+    const displayMode = document.getElementById('display-mode');
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+        displayMode.textContent = 'Standalone (Instalado) ✅';
+        displayMode.classList.add('text-success');
+    } else if (window.matchMedia('(display-mode: fullscreen)').matches) {
+        displayMode.textContent = 'Fullscreen ✅';
+        displayMode.classList.add('text-success');
+    } else if (window.matchMedia('(display-mode: minimal-ui)').matches) {
+        displayMode.textContent = 'Minimal UI ✅';
+        displayMode.classList.add('text-success');
+    } else {
+        displayMode.textContent = 'Browser (Não instalado) ❓';
+        displayMode.classList.add('text-warning');
+    }
+
+    // Teste de cache
+    document.getElementById('test-cache-btn').addEventListener('click', function() {
+        const cacheResult = document.getElementById('cache-result');
+        cacheResult.innerHTML = '<div class="text-center"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Carregando...</span></div><p>Testando cache...</p></div>';
+        
+        // Tentar carregar um ícone do cache
+        fetch('/static/icons/icon-192x192.png')
+            .then(response => {
+                if (response.ok) {
+                    cacheResult.innerHTML = `
+                        <div class="alert alert-success">
+                            <p>Imagem carregada com sucesso! ✅</p>
+                            <p>Fonte: ${response.url}</p>
+                            <p>Status: ${response.status}</p>
+                            <img src="/static/icons/icon-192x192.png" alt="Ícone" style="width: 64px; height: 64px;">
+                        </div>
+                    `;
+                } else {
+                    cacheResult.innerHTML = `
+                        <div class="alert alert-danger">
+                            <p>Erro ao carregar imagem ❌</p>
+                            <p>Status: ${response.status}</p>
+                        </div>
+                    `;
+                }
+            })
+            .catch(error => {
+                cacheResult.innerHTML = `
+                    <div class="alert alert-danger">
+                        <p>Erro ao carregar imagem ❌</p>
+                        <p>Erro: ${error.message}</p>
+                    </div>
+                `;
+            });
+    });
+});
+</script>
+{% endblock %}
